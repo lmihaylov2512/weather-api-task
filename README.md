@@ -43,19 +43,31 @@ docker compose up -d
 ```
 This command will build and start the Docker containers for the Laravel (`php` service), Vite frontend (`node` service), MySQL database (`db` service), Redis instance (`redis` service) and phpMyAdmin (`pma` service).
 
-And don't worry about manual Composer or NPM dependencies installing, database migrations with schemas or seeders with sample data, because everything becomes completely automatically, under the hood.
+And don't worry about manual Composer or NPM dependencies installing, database migrations with schemas.
 
-5. Open the application in your browser:
+5. Populate the sample data
+- Firstly to populate cities data, apply database seeder
+```bash
+docker compose exec php php artisan db:seed --class=CitySeeder
+```
+
+- To populate weather history for days period ago, execute the custom command
+```bash
+docker compose exec php php artisan app:populate-weather-history --days=20
+```
+where `--days` is argument and can be any number
+
+6. Open the application in your browser:
 - Public website: http://localhost:8000/
 - API (only base path): http://localhost:8000/api/v1/
 - phpMyAdmin: http://localhost:8090/
 
-6. To stop the containers:
+7. To stop the containers:
 ```bash
 docker compose down
 ```
 
-7. To run test cases (within **php** docker compose service), including test coverage information:
+8. To run test cases (within **php** docker compose service), including test coverage information:
 ```bash
 docker compose exec php php artisan test --coverage
 ```
