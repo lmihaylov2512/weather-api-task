@@ -17,12 +17,6 @@ return new class extends Migration
             $table->string('name', 100)->nullable(false)->unique('idx_cities_name');
             $table->timestamps();
         });
-
-        // ensuring the sample cities seeder will be executed only once
-        Artisan::call('db:seed', [
-            '--class' => CitySeeder::class,
-            '--force' => 'yes',
-        ]);
     }
 
     /**
