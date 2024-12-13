@@ -1,66 +1,82 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Weather API service
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Technologies Used
 
-## About Laravel
+- **Back-end**: PHP 8.3 + Laravel 11
+- **Front-end**: React on Vite
+- **Database**: MySQL 8
+- **Cache**: Redis
+- **Containerization**: Docker and Docker Compose
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Getting Started
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+To get started, you need to have Docker and Docker Compose installed on your local machine.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Prerequisites
 
-## Learning Laravel
+- Docker: [Install Docker](https://docs.docker.com/get-docker/)
+- Docker Compose: [Install Docker Compose](https://docs.docker.com/compose/install/)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Setting Up the Development Environment
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+**1. Clone the repository:**
+```bash
+git clone https://github.com/lmihaylov2512/weather-api-task.git
+cd weather-api-task
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**2. Copy `.env.example` file to `.env`:**
+```bash
+cp -n .env.example .env
+```
 
-## Laravel Sponsors
+**3. Paste the third-party weather service API key to `.env`:**
+```
+...
+WEATHER_API_SERVICE_KEY={{PASTE_HERE}}
+...
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+**4. Build and start the Docker containers:**
+```bash
+docker compose up -d
+```
+This command will build and start the Docker containers for the Laravel (`php` service), Vite frontend (`node` service), MySQL database (`db` service), Redis instance (`redis` service) and phpMyAdmin (`pma` service).
 
-### Premium Partners
+And don't worry about manual Composer or NPM dependencies installing, database migrations with schemas, because everything becomes completely automatically, under the hood.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+**5. Populate the sample data:**
+- Firstly to populate cities data, apply database seeder
+```bash
+docker compose exec php php artisan db:seed --class=CitySeeder
+```
 
-## Contributing
+- To populate weather history for days period ago, execute the custom command
+```bash
+docker compose exec php php artisan app:populate-weather-history --days=20
+```
+where `--days` is argument and can be any positive number
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+**6. Open the application in your browser:**
+- Public website: http://localhost:8000/
+- API (only base path): http://localhost:8000/api/v1/
+- phpMyAdmin: http://localhost:8090/
 
-## Code of Conduct
+**7. To run test cases (utilizing **php** docker compose service), including test coverage information:**
+```bash
+docker compose exec php php artisan test --coverage
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+**8. To stop the containers:**
+```bash
+docker compose down
+```
 
-## Security Vulnerabilities
+## Troubleshooting
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+#### 1. Docker images are not building/running
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The solution was developed on macOS with Apple M1 processor, respectively `arm64` architecture. I hope there are no issues on other OS and architecture,
+especially the Docker images building process. Unfortunately I can't test the Docker build process on another machine.
+If you face some issues about building the images or running the containers, contact me.
+My e-mail address is [me@lmihaylov.com](mailto:me@lmihaylov.com)

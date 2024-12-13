@@ -1,0 +1,52 @@
+# Ignore node_modules and vendor directories
+node_modules
+vendor
+
+# Ignore Laravel environment files
+.env
+.env.*
+
+# Ignore log and cache files
+storage/logs/*
+!storage/logs/.gitignore
+storage/framework/cache/*
+!storage/framework/cache/.gitignore
+storage/framework/sessions/*
+!storage/framework/sessions/.gitignore
+storage/framework/testing/*
+!storage/framework/testing/.gitignore
+storage/framework/views/*
+!storage/framework/views/.gitignore
+
+# Ignore compiled assets
+/public/hot
+/public/storage
+/public/*.js.map
+/public/*.css.map
+
+# Ignore IDE and editor config files
+.idea
+.vscode
+*.sublime*
+
+# Ignore deployment-related files
+.DS_Store
+*.log
+*.swp
+*.bak
+*.tmp
+
+# Ignore build and dependency artifacts
+npm-debug.log
+yarn-error.log
+composer.lock
+package-lock.json
+
+# Ignore git-related files
+.git
+.gitignore
+
+# Ignore Docker-related files if necessary
+.dockerignore
+Dockerfile
+docker-compose.yml
