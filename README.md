@@ -19,33 +19,33 @@ To get started, you need to have Docker and Docker Compose installed on your loc
 
 ### Setting Up the Development Environment
 
-1. Clone the repository:
+**1. Clone the repository:**
 ```bash
-git clone https://github.com/lmihaylov2512/siteground-supermarket.git
-cd siteground-supermarket
+git clone https://github.com/lmihaylov2512/weather-api-task.git
+cd weather-api-task
 ```
 
-2. Copy `.env.example` file to `.env`
+**2. Copy `.env.example` file to `.env`:**
 ```bash
 cp -n .env.example .env
 ```
 
-3. Paste the third-party weather service API key to `.env`
+**3. Paste the third-party weather service API key to `.env`:**
 ```
 ...
-WEATHER_API_SERVICE_KEY=...
+WEATHER_API_SERVICE_KEY={{PASTE_HERE}}
 ...
 ```
 
-4. Build and start the Docker containers:
+**4. Build and start the Docker containers:**
 ```bash
 docker compose up -d
 ```
 This command will build and start the Docker containers for the Laravel (`php` service), Vite frontend (`node` service), MySQL database (`db` service), Redis instance (`redis` service) and phpMyAdmin (`pma` service).
 
-And don't worry about manual Composer or NPM dependencies installing, database migrations with schemas.
+And don't worry about manual Composer or NPM dependencies installing, database migrations with schemas, because everything becomes completely automatically, under the hood.
 
-5. Populate the sample data
+**5. Populate the sample data:**
 - Firstly to populate cities data, apply database seeder
 ```bash
 docker compose exec php php artisan db:seed --class=CitySeeder
@@ -55,21 +55,21 @@ docker compose exec php php artisan db:seed --class=CitySeeder
 ```bash
 docker compose exec php php artisan app:populate-weather-history --days=20
 ```
-where `--days` is argument and can be any number
+where `--days` is argument and can be any positive number
 
-6. Open the application in your browser:
+**6. Open the application in your browser:**
 - Public website: http://localhost:8000/
 - API (only base path): http://localhost:8000/api/v1/
 - phpMyAdmin: http://localhost:8090/
 
-7. To stop the containers:
-```bash
-docker compose down
-```
-
-8. To run test cases (within **php** docker compose service), including test coverage information:
+**7. To run test cases (utilizing **php** docker compose service), including test coverage information:**
 ```bash
 docker compose exec php php artisan test --coverage
+```
+
+**8. To stop the containers:**
+```bash
+docker compose down
 ```
 
 ## Troubleshooting

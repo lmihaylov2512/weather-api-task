@@ -6,24 +6,26 @@ import LittleSpinner from './LittleSpinner.jsx';
 import { capitalizeFirstLetter } from '../utils.js';
 
 const WeatherWidget = ({ city, source = 'internal' }) => {
-  const [weather, setWeather] = useState({
-    temperature: null,
-    trend: null,
-  });
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     let ignore = false;
 
     (async () => {
-      const response = await axios.get(`/api/v1/weather/${city}?source=${source}`);
-      const data = response.data;
+      try {
+        const response = await axios.get(`/api/v1/weather/${city}?source=${source}`);
 
-      if (ignore) return;
+        if (ignore) return;
 
-      setWeather({
-        temperature: data.temperature,
-        trend: data.trend,
-      });
+        setData(response.data);
+      } catch (err) {
+        console.error(err);
+        setError(err?.response?.data?.message ?? 'Error while fetching');
+      } finally {
+        setLoading(false);
+      }
     })();
 
     return () => {
@@ -38,9 +40,8 @@ const WeatherWidget = ({ city, source = 'internal' }) => {
           <h2 className="text-2xl font-bold">{capitalizeFirstLetter(city)}</h2>
         </div>
         <div className="text-5xl font-bold">
-          {weather.temperature === null
-            ? <LittleSpinner/>
-            : <div className="text-6xl font-bold">{weather.temperature}°C</div>
+          {loading && <LittleSpinner/>
+            || data && <div className="text-6xl font-bold">{data.temperature}°C</div>
           }
         </div>
       </div>
@@ -51,9 +52,9 @@ const WeatherWidget = ({ city, source = 'internal' }) => {
         </div>
         <div className="flex items-center space-x-2 bg-white text-black py-1 px-2 rounded">
           {/*<p className="text-lg font-bold">Trend</p>*/}
-          {weather.trend === null
-            ? <LittleSpinner/>
-            : <p className="text-2xl">{weather.trend}</p>
+          {loading && <LittleSpinner/>
+            || data && <p className="text-2xl">{data.trend}</p>
+            || error && <p className="text-base text-red-600">{error}</p>
           }
         </div>
       </div>

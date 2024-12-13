@@ -34,12 +34,24 @@ class PopulateWeatherHistory extends Command
     {
         $days = $this->option('days');
 
+        if ($days <= 0) {
+            $this->error('The --days argument must be a positive number.');
+
+            return 1;
+        }
+
         // generate an array of dates using a range, between today and days option period
         $dates = array_map(fn($daysAgo) => Carbon::now()->subDays($daysAgo)->toDateString(), range(1, $days));
 
         $cities = City::query()
             ->with('weatherHistory', fn(HasMany $query) => $query->lastDays($days))
             ->get();
+
+        if ($cities->count() === 0) {
+            $this->warn('There is no city records into the database.');
+
+            return 0;
+        }
 
         /** @var City $city */
         foreach ($cities as $city) {
